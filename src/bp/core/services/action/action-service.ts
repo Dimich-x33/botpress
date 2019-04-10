@@ -173,7 +173,8 @@ export class ScopedActionService {
         session: incomingEvent.state.session,
         args: actionArgs,
         printObject: printObject,
-        process: { // TODO: Memoize this to prevent computing every time
+        process: {
+          // TODO: Memoize this to prevent computing every time
           ..._.pick(process, 'HOST', 'PORT', 'EXTERNAL_URL', 'PROXY'),
           env: _.pickBy(process.env, (value, name) => name.startsWith('EXPOSED_'))
         }
@@ -182,7 +183,9 @@ export class ScopedActionService {
         external: true,
         mock: modRequire
       },
-      timeout: 5000
+      timeout: 5000,
+      // Necessary to run nested vm2 inside action
+      nesting: true
     })
 
     const runner = new VmRunner()
