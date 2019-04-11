@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import { Table } from 'react-bootstrap'
 import classnames from 'classnames'
 import _ from 'lodash'
-import MonacoEditor from 'react-monaco-editor'
-import { IEditorConstructionOptions } from 'monaco-editor/esm/vs/editor/editor.api'
+import OpenEditorButton from './OpenEditorButton'
 
 const style = require('./parameters.scss')
 
@@ -40,20 +39,7 @@ export default class ParametersTable extends Component {
         return <input type="text" placeholder={placeholder} value={value} onChange={onChange} />
 
       case 'JavaScript':
-        return (
-          <MonacoEditor
-            height="200"
-            value={value}
-            onChange={onChange}
-            language="javascript"
-            style={{ width: '100%', height: '200px' }}
-            options={{
-              selectOnLineNumbers: true,
-              minimap: { enabled: false },
-              theme: 'vs-dark'
-            }}
-          />
-        )
+        return <OpenEditorButton placeholder={placeholder} value={value} onChange={onChange} language="javascript" />
 
       default:
         return <input type="text" placeholder={placeholder} value={value} onChange={onChange} />

@@ -10,9 +10,9 @@ console.log('Arguments =', util.inspect(args, false, 1, true));
  * @title Eval JS
  * @category JavaScript
  * @author Anonimus
- * @param {JavaScript} script
+ * @param {JavaScript} script - Available variables to mutate: `user`, `temp`, `session`
  */
-async function RUN_JS(script) {
+function RUN_JS(script) {
   const vm = new NodeVM({
     compiler: 'javascript',
     console: 'inherit',
@@ -25,9 +25,7 @@ async function RUN_JS(script) {
     }
   });
 
-  let f = vm.run(script);
-
-  temp.evalResult = f();
+  vm.run(script);
 }
 
 return RUN_JS(args.script);
