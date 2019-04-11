@@ -4,6 +4,8 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { Table } from 'react-bootstrap'
 import classnames from 'classnames'
 import _ from 'lodash'
+import MonacoEditor from 'react-monaco-editor'
+import { IEditorConstructionOptions } from 'monaco-editor/esm/vs/editor/editor.api'
 
 const style = require('./parameters.scss')
 
@@ -39,11 +41,17 @@ export default class ParametersTable extends Component {
 
       case 'JavaScript':
         return (
-          <textarea
-            placeholder={placeholder}
+          <MonacoEditor
+            height="200"
             value={value}
             onChange={onChange}
-            style={{ resize: 'vertical', width: '100%' }}
+            language="javascript"
+            style={{ width: '100%', height: '200px' }}
+            options={{
+              selectOnLineNumbers: true,
+              minimap: { enabled: false },
+              theme: 'vs-dark'
+            }}
           />
         )
 

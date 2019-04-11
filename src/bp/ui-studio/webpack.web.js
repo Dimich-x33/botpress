@@ -7,6 +7,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 const isProduction = process.env.NODE_ENV === 'production'
 
 const webConfig = {
@@ -76,8 +78,7 @@ const webConfig = {
         NODE_ENV: isProduction ? JSON.stringify('production') : JSON.stringify('development')
       }
     }),
-    new CopyWebpackPlugin([
-      {
+    new CopyWebpackPlugin([{
         from: path.resolve(__dirname, './src/web/img'),
         to: path.resolve(__dirname, './public/img')
       },
@@ -94,28 +95,33 @@ const webConfig = {
         to: path.resolve(__dirname, './public/external/docs')
       }
     ]),
-    new CleanWebpackPlugin(['public'])
+    new CleanWebpackPlugin(['public']),
+    new MonacoWebpackPlugin({
+      languages: ['javascript', 'typescript']
+    })
   ],
 
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.md$/,
-        use: [
-          {
-            loader: 'raw-loader'
-          }
-        ]
+        use: [{
+          loader: 'raw-loader'
+        }]
       },
       {
         test: /\.jsx?$/i,
         include: path.resolve(__dirname, 'src/web'),
-        use: [
-          { loader: 'thread-loader' },
+        use: [{
+            loader: 'thread-loader'
+          },
           {
             loader: 'babel-loader',
             options: {
-              presets: ['stage-3', ['env', { targets: { browsers: ['last 2 versions'] } }], 'react'],
+              presets: ['stage-3', ['env', {
+                targets: {
+                  browsers: ['last 2 versions']
+                }
+              }], 'react'],
               plugins: ['transform-class-properties'],
               compact: true,
               babelrc: false,
@@ -126,8 +132,9 @@ const webConfig = {
       },
       {
         test: /\.styl$/,
-        use: [
-          { loader: 'style-loader' },
+        use: [{
+            loader: 'style-loader'
+          },
           {
             loader: 'css-loader',
             options: {
@@ -136,14 +143,19 @@ const webConfig = {
               localIdentName: '[name]__[local]___[hash:base64:5]'
             }
           },
-          { loader: 'postcss-loader' },
-          { loader: 'stylus-loader' }
+          {
+            loader: 'postcss-loader'
+          },
+          {
+            loader: 'stylus-loader'
+          }
         ]
       },
       {
         test: /\.scss$/,
-        use: [
-          { loader: 'style-loader' },
+        use: [{
+            loader: 'style-loader'
+          },
           {
             loader: 'css-loader',
             options: {
@@ -152,8 +164,12 @@ const webConfig = {
               localIdentName: '[name]__[local]___[hash:base64:5]'
             }
           },
-          { loader: 'postcss-loader' },
-          { loader: 'sass-loader' }
+          {
+            loader: 'postcss-loader'
+          },
+          {
+            loader: 'sass-loader'
+          }
         ]
       },
       {
@@ -162,7 +178,12 @@ const webConfig = {
       },
       {
         test: /\.woff|\.woff2|\.svg|.eot|\.ttf/,
-        use: [{ loader: 'file-loader', options: { name: '../fonts/[name].[ext]' } }]
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '../fonts/[name].[ext]'
+          }
+        }]
       }
     ]
   }
@@ -189,12 +210,13 @@ if (process.argv.indexOf('--compile') !== -1) {
   showNodeEnvWarning()
   compiler.run(postProcess)
 } else if (process.argv.indexOf('--watch') !== -1) {
-  compiler.watch(
-    {
+  compiler.watch({
       ignored: ['*', /!.\/src\/web/]
     },
     postProcess
   )
 }
 
-module.exports = { web: webConfig }
+module.exports = {
+  web: webConfig
+}
